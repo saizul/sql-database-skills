@@ -1,0 +1,13 @@
+                                                          QUERY PLAN
+------------------------------------------------------------------------------------------------------------------------------
+ Nested Loop  (cost=0.00..90512.10 rows=10 width=16) (actual time=0.05..2210.4 rows=4800 loops=1)
+   Buffers: shared hit=120 read=48000
+   ->  Seq Scan on customers c  (cost=0.00..180.00 rows=5 width=8) (actual time=0.01..1.2 rows=4800 loops=1)
+         Filter: (country = 'NL'::text)
+         Rows Removed by Filter: 200
+   ->  Seq Scan on orders o  (cost=0.00..18000.00 rows=2 width=8) (actual time=0.2..0.45 rows=1 loops=4800)
+         Filter: (customer_id = c.id)
+         Rows Removed by Filter: 99999
+ Planning Time: 0.311 ms
+ Execution Time: 2212.880 ms
+(10 rows)

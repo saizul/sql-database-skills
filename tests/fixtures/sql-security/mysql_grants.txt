@@ -1,0 +1,8 @@
+-- SHOW GRANTS output collected with: mysql -N -e "SHOW GRANTS FOR 'app'@'%'" (one per account)
+GRANT USAGE ON *.* TO `app`@`%`
+GRANT ALL PRIVILEGES ON `shop`.* TO `app`@`%`
+GRANT ALL PRIVILEGES ON *.* TO `reporting`@`10.0.0.%` WITH GRANT OPTION
+GRANT SELECT, FILE, PROCESS ON *.* TO `etl`@`10.0.0.5`
+GRANT ALL PRIVILEGES ON *.* TO `root`@`localhost` WITH GRANT OPTION
+CREATE USER 'guest'@'%' IDENTIFIED BY '';
+CREATE USER 'legacy'@'10.0.0.%' IDENTIFIED WITH 'mysql_native_password' BY 'redacted';

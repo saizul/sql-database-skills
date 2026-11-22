@@ -1,0 +1,2 @@
+Seq Scan on audit_log  (cost=0.00..35811.00 rows=2000000 width=64)
+  Filter: (created_at < now())

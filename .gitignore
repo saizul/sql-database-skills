@@ -1,0 +1,23 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Release artifacts (built by .github/workflows/release.yml)
+dist/
+
+# Never commit credentials, real dumps or logs from production
+*.env
+!*.env.example
+.pgpass
+.my.cnf
+/backups/
+/captures/
+
+# Editors / OS
+.idea/
+.vscode/
+.DS_Store

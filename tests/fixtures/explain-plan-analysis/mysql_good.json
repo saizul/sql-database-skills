@@ -1,0 +1,19 @@
+{
+  "query_block": {
+    "select_id": 1,
+    "cost_info": {"query_cost": "12.40"},
+    "ordering_operation": {
+      "using_filesort": false,
+      "table": {
+        "table_name": "orders",
+        "access_type": "ref",
+        "possible_keys": ["idx_customer_created"],
+        "key": "idx_customer_created",
+        "used_key_parts": ["customer_id"],
+        "rows_examined_per_scan": 25,
+        "filtered": "100.00",
+        "using_index": true
+      }
+    }
+  }
+}

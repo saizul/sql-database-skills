@@ -1,0 +1,14 @@
+{
+  "name": "sql-database-skills",
+  "displayName": "SQL Database Skills",
+  "version": "0.1.0",
+  "description": "Agent Skills for PostgreSQL and MySQL/MariaDB: query review, EXPLAIN analysis, index advice, zero-downtime migrations, schema review, slow query triage, backup/restore drills and SQL security.",
+  "author": {
+    "name": "Saizul Amin",
+    "url": "https://github.com/saizul"
+  },
+  "homepage": "https://github.com/saizul/sql-database-skills",
+  "repository": "https://github.com/saizul/sql-database-skills",
+  "license": "MIT",
+  "keywords": ["sql", "postgresql", "mysql", "mariadb", "database", "explain", "indexes", "migrations", "dba", "security"]
+}

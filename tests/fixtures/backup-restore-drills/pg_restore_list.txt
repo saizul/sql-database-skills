@@ -1,0 +1,20 @@
+;
+; Archive created at 2026-11-21 02:00:03 UTC
+;     dbname: shop
+;     TOC Entries: 12
+;     Compression: gzip
+;     Dump Version: 1.15-0
+;     Format: CUSTOM
+;     Dumped from database version: 16.4
+;     Dumped by pg_dump version: 16.4
+;
+; Selected TOC Entries:
+;
+215; 1259 16390 TABLE public customers app
+216; 1259 16396 TABLE public orders app
+217; 1259 16399 TABLE public audit_log app
+3350; 0 16390 TABLE DATA public customers app
+3351; 0 16396 TABLE DATA public orders app
+3200; 2606 16402 CONSTRAINT public customers customers_pkey app
+3205; 1259 16410 INDEX public orders_customer_id_idx app
+3210; 2606 16420 FK CONSTRAINT public orders orders_customer_id_fkey app

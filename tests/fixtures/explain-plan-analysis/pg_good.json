@@ -1,0 +1,29 @@
+[
+  {
+    "Plan": {
+      "Node Type": "Limit",
+      "Total Cost": 12.5,
+      "Plan Rows": 20,
+      "Actual Total Time": 0.21,
+      "Actual Rows": 20,
+      "Actual Loops": 1,
+      "Plans": [
+        {
+          "Node Type": "Index Scan",
+          "Scan Direction": "Backward",
+          "Index Name": "orders_status_created_at_idx",
+          "Relation Name": "orders",
+          "Alias": "o",
+          "Total Cost": 840.0,
+          "Plan Rows": 48000,
+          "Actual Total Time": 0.19,
+          "Actual Rows": 20,
+          "Actual Loops": 1,
+          "Index Cond": "((status)::text = 'pending'::text)"
+        }
+      ]
+    },
+    "Planning Time": 0.2,
+    "Execution Time": 0.3
+  }
+]

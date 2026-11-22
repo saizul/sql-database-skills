@@ -1,0 +1,27 @@
+{
+  "name": "sql-database-skills",
+  "description": "Agent Skills for working safely with PostgreSQL and MySQL/MariaDB databases.",
+  "owner": {
+    "name": "Saizul Amin",
+    "url": "https://github.com/saizul"
+  },
+  "plugins": [
+    {
+      "name": "sql-database-skills",
+      "source": "./",
+      "description": "SQL query review, EXPLAIN plan analysis, index advice, zero-downtime migrations, schema design review, slow query log triage, backup and restore drills, SQL security.",
+      "category": "database",
+      "tags": ["sql", "postgresql", "mysql", "mariadb", "database", "performance", "migrations", "security"],
+      "skills": [
+        "./skills/sql-query-review",
+        "./skills/explain-plan-analysis",
+        "./skills/index-advisor",
+        "./skills/safe-migrations",
+        "./skills/schema-design-review",
+        "./skills/slow-query-log-triage",
+        "./skills/backup-restore-drills",
+        "./skills/sql-security"
+      ]
+    }
+  ]
+}

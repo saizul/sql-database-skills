@@ -1,0 +1,4 @@
+table	rows
+customers	50
+orders	120
+audit_log	0

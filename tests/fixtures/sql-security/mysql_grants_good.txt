@@ -1,0 +1,4 @@
+GRANT USAGE ON *.* TO `app`@`10.0.0.%`
+GRANT SELECT, INSERT, UPDATE, DELETE ON `shop`.* TO `app`@`10.0.0.%`
+GRANT SELECT ON `shop`.* TO `reporting`@`10.0.0.20`
+GRANT ALL PRIVILEGES ON *.* TO `root`@`localhost` WITH GRANT OPTION

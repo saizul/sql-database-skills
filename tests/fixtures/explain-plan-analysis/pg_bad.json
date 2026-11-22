@@ -1,0 +1,75 @@
+[
+  {
+    "Plan": {
+      "Node Type": "Sort",
+      "Startup Cost": 25000.5,
+      "Total Cost": 25010.2,
+      "Plan Rows": 120,
+      "Plan Width": 48,
+      "Actual Startup Time": 812.4,
+      "Actual Total Time": 860.9,
+      "Actual Rows": 48210,
+      "Actual Loops": 1,
+      "Sort Key": ["o.created_at DESC"],
+      "Sort Method": "external merge",
+      "Sort Space Used": 9120,
+      "Sort Space Type": "Disk",
+      "Plans": [
+        {
+          "Node Type": "Hash Join",
+          "Parent Relationship": "Outer",
+          "Join Type": "Inner",
+          "Total Cost": 24000.0,
+          "Plan Rows": 120,
+          "Actual Total Time": 640.2,
+          "Actual Rows": 48210,
+          "Actual Loops": 1,
+          "Hash Cond": "(o.customer_id = c.id)",
+          "Plans": [
+            {
+              "Node Type": "Seq Scan",
+              "Parent Relationship": "Outer",
+              "Relation Name": "orders",
+              "Alias": "o",
+              "Total Cost": 20000.0,
+              "Plan Rows": 1200,
+              "Actual Total Time": 520.7,
+              "Actual Rows": 48210,
+              "Actual Loops": 1,
+              "Filter": "((status)::text = 'pending'::text)",
+              "Rows Removed by Filter": 951790
+            },
+            {
+              "Node Type": "Hash",
+              "Parent Relationship": "Inner",
+              "Total Cost": 3000.0,
+              "Plan Rows": 50000,
+              "Actual Total Time": 60.1,
+              "Actual Rows": 50000,
+              "Actual Loops": 1,
+              "Hash Batches": 4,
+              "Original Hash Batches": 1,
+              "Plans": [
+                {
+                  "Node Type": "Seq Scan",
+                  "Parent Relationship": "Outer",
+                  "Relation Name": "customers",
+                  "Alias": "c",
+                  "Total Cost": 2500.0,
+                  "Plan Rows": 50000,
+                  "Actual Total Time": 30.5,
+                  "Actual Rows": 50000,
+                  "Actual Loops": 1
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "Planning Time": 0.9,
+    "Triggers": [],
+    "JIT": {"Functions": 12, "Timing": {"Generation": 2.1, "Inlining": 40.0, "Optimization": 60.0, "Emission": 30.0, "Total": 132.1}},
+    "Execution Time": 870.3
+  }
+]

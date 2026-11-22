@@ -1,0 +1,46 @@
+name: Bug report
+description: A script crashed, reported a wrong finding, missed an obvious one, or a skill gave unsafe advice
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Never paste passwords, connection strings, password hashes, real customer data or full
+        production logs.** Reduce the SQL, plan or log to a minimal, anonymised example.
+  - type: dropdown
+    id: skill
+    attributes:
+      label: Skill
+      options:
+        - sql-query-review
+        - explain-plan-analysis
+        - index-advisor
+        - safe-migrations
+        - schema-design-review
+        - slow-query-log-triage
+        - backup-restore-drills
+        - sql-security
+        - validator / repository tooling
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: The command you ran, its output, and a minimal anonymised input (SQL, plan, log excerpt).
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: What did you expect?
+    validations:
+      required: true
+  - type: input
+    id: env
+    attributes:
+      label: Environment
+      placeholder: "PostgreSQL 16.4 / MySQL 8.0.40 / MariaDB 11.4, Python 3.12, Claude Code / Codex CLI"
+    validations:
+      required: true

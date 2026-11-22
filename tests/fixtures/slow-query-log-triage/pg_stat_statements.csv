@@ -1,0 +1,4 @@
+userid,dbid,queryid,query,calls,total_exec_time,mean_exec_time,max_exec_time,rows,shared_blks_hit,shared_blks_read,temp_blks_written
+10,16384,111,"SELECT id, name FROM products WHERE id = $1",250000,2500.5,0.01,4.2,250000,1000000,10,0
+10,16384,222,"SELECT * FROM orders WHERE status = $1 ORDER BY created_at",1200,96000.0,80.0,2400.0,120000,50000,400000,8000
+10,16384,333,"UPDATE carts SET updated_at = now() WHERE id = $1",5000,1500.0,0.3,20.0,5000,20000,5,0

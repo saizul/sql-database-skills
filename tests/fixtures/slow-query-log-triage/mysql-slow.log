@@ -1,0 +1,71 @@
+/usr/sbin/mysqld, Version: 8.0.40 (MySQL Community Server - GPL). started with:
+Tcp port: 3306  Unix socket: /var/run/mysqld/mysqld.sock
+Time                 Id Command    Argument
+# Time: 2026-11-20T10:00:00.000000Z
+# User@Host: app[app] @  [192.0.2.10]  Id:    42
+# Query_time: 2.000000  Lock_time: 0.000100 Rows_sent: 20  Rows_examined: 1000000
+use shop;
+SET timestamp=1763633700;
+SELECT id, total FROM orders
+WHERE status = 'pending' AND customer_id = 100
+ORDER BY created_at DESC LIMIT 20;
+# Time: 2026-11-20T10:01:00.000000Z
+# User@Host: app[app] @  [192.0.2.10]  Id:    42
+# Query_time: 2.100000  Lock_time: 0.000100 Rows_sent: 20  Rows_examined: 1000000
+SET timestamp=1763633700;
+SELECT id, total FROM orders
+WHERE status = 'pending' AND customer_id = 101
+ORDER BY created_at DESC LIMIT 20;
+# Time: 2026-11-20T10:02:00.000000Z
+# User@Host: app[app] @  [192.0.2.10]  Id:    42
+# Query_time: 2.200000  Lock_time: 0.000100 Rows_sent: 20  Rows_examined: 1000000
+SET timestamp=1763633700;
+SELECT id, total FROM orders
+WHERE status = 'pending' AND customer_id = 102
+ORDER BY created_at DESC LIMIT 20;
+# Time: 2026-11-20T10:03:00.000000Z
+# User@Host: app[app] @  [192.0.2.10]  Id:    42
+# Query_time: 2.300000  Lock_time: 0.000100 Rows_sent: 20  Rows_examined: 1000000
+SET timestamp=1763633700;
+SELECT id, total FROM orders
+WHERE status = 'pending' AND customer_id = 103
+ORDER BY created_at DESC LIMIT 20;
+# Time: 2026-11-20T10:04:00.000000Z
+# User@Host: app[app] @  [192.0.2.10]  Id:    42
+# Query_time: 2.400000  Lock_time: 0.000100 Rows_sent: 20  Rows_examined: 1000000
+SET timestamp=1763633700;
+SELECT id, total FROM orders
+WHERE status = 'pending' AND customer_id = 104
+ORDER BY created_at DESC LIMIT 20;
+# Time: 2026-11-20T10:05:00.000000Z
+# User@Host: app[app] @  [192.0.2.10]  Id:    42
+# Query_time: 2.500000  Lock_time: 0.000100 Rows_sent: 20  Rows_examined: 1000000
+SET timestamp=1763633700;
+SELECT id, total FROM orders
+WHERE status = 'pending' AND customer_id = 105
+ORDER BY created_at DESC LIMIT 20;
+# Time: 2026-11-20T10:10:00.000000Z
+# User@Host: app[app] @  [192.0.2.10]  Id:    42
+# Query_time: 1.500000  Lock_time: 1.200000 Rows_sent: 0  Rows_examined: 0
+SET timestamp=1763633700;
+UPDATE inventory SET qty = qty - 1 WHERE product_id = 0;
+# Time: 2026-11-20T10:11:00.000000Z
+# User@Host: app[app] @  [192.0.2.10]  Id:    42
+# Query_time: 1.500000  Lock_time: 1.200000 Rows_sent: 0  Rows_examined: 0
+SET timestamp=1763633700;
+UPDATE inventory SET qty = qty - 1 WHERE product_id = 1;
+# Time: 2026-11-20T10:12:00.000000Z
+# User@Host: app[app] @  [192.0.2.10]  Id:    42
+# Query_time: 1.500000  Lock_time: 1.200000 Rows_sent: 0  Rows_examined: 0
+SET timestamp=1763633700;
+UPDATE inventory SET qty = qty - 1 WHERE product_id = 2;
+# Time: 2026-11-20T10:30:00.000000Z
+# User@Host: app[app] @  [192.0.2.10]  Id:    42
+# Query_time: 12.000000  Lock_time: 0.000000 Rows_sent: 1  Rows_examined: 5000000
+SET timestamp=1763633700;
+SELECT COUNT(*) FROM events WHERE kind IN ('a', 'b', 'c');
+# Time: 2026-11-20T11:00:00.000000Z
+# User@Host: app[app] @  [192.0.2.10]  Id:    42
+# Query_time: 1.100000  Lock_time: 0.000000 Rows_sent: 5  Rows_examined: 50
+SET timestamp=1763633700;
+SELECT id FROM users WHERE email = 'person@example.com';

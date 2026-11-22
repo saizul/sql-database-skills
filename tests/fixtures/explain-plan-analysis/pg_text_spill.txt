@@ -1,0 +1,11 @@
+Sort  (cost=150000.00..152500.00 rows=1000000 width=40) (actual time=4100.2..4800.9 rows=1000000 loops=1)
+  Sort Key: created_at
+  Sort Method: external merge  Disk: 48200kB
+  ->  Bitmap Heap Scan on events  (cost=100.00..90000.00 rows=1000000 width=40) (actual time=20.1..1900.4 rows=1000000 loops=1)
+        Recheck Cond: (kind = 'click'::text)
+        Rows Removed by Index Recheck: 250000
+        Heap Blocks: exact=12000 lossy=33000
+        ->  Bitmap Index Scan on events_kind_idx  (cost=0.00..90.00 rows=1000000 width=0) (actual time=18.0..18.0 rows=1000000 loops=1)
+              Index Cond: (kind = 'click'::text)
+Planning Time: 0.150 ms
+Execution Time: 4950.112 ms
