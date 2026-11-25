@@ -130,3 +130,19 @@ def test_cli(tmp_path):
     assert run_script(SKILL, SCRIPT, "-", stdin="SELECT a FROM t WHERE b LIKE 'x%'").returncode == 0
     assert run_script(SKILL, SCRIPT, str(tmp_path / "missing.sql")).returncode == 2
     assert run_script(SKILL, SCRIPT, "--help").returncode == 0
+
+
+def test_limit_without_order_by():
+    assert "limit_without_order_by" in checks("SELECT id FROM orders WHERE status = 'x' LIMIT 20 OFFSET 40")
+    assert "limit_without_order_by" in checks("SELECT id FROM orders OFFSET 10 ROWS FETCH NEXT 5 ROWS ONLY")
+    assert "limit_without_order_by" not in checks("SELECT id FROM orders ORDER BY id LIMIT 20")
+
+
+def test_limit_one_without_order_by_is_info():
+    findings, _ = mod.lint_text("SELECT id FROM users WHERE email = $1 LIMIT 1", "x.sql", opts(), {})
+    assert [(f.check, f.severity) for f in findings] == [("limit_without_order_by", "info")]
+
+
+def test_limit_inside_subquery_is_not_reported():
+    sql = "SELECT a FROM t WHERE EXISTS (SELECT 1 FROM u WHERE u.t_id = t.id LIMIT 1)"
+    assert "limit_without_order_by" not in checks(sql)

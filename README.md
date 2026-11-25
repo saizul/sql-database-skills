@@ -26,7 +26,7 @@ deterministic analysis instead of guessing.
 
 | Skill | What it does | Try asking |
 | --- | --- | --- |
-| [sql-query-review](skills/sql-query-review/SKILL.md) | Lints SQL for `SELECT *`, functions on indexed columns, leading-wildcard LIKE, OR chains, `NOT IN` + NULL, `= NULL`, UPDATE/DELETE without WHERE, deep OFFSET, implicit casts, N+1 bursts in query logs; rewrites them | "Why doesn't this query use my index?" |
+| [sql-query-review](skills/sql-query-review/SKILL.md) | Lints SQL for `SELECT *`, functions on indexed columns, leading-wildcard LIKE, OR chains, `NOT IN` + NULL, `= NULL`, UPDATE/DELETE without WHERE, deep OFFSET, LIMIT without ORDER BY, implicit casts, N+1 bursts in query logs; rewrites them | "Why doesn't this query use my index?" |
 | [explain-plan-analysis](skills/explain-plan-analysis/SKILL.md) | Parses PostgreSQL `EXPLAIN (ANALYZE, BUFFERS)` JSON/text and MySQL `FORMAT=JSON` / `EXPLAIN ANALYZE`: self-time hotspots, seq scans, scans in nested loops, misestimates, disk sorts and hashes, filesorts, temp tables | "Here's the EXPLAIN ANALYZE output, what's slow?" |
 | [index-advisor](skills/index-advisor/SKILL.md) | Suggests composite and covering indexes from queries + schema (equality, sort, range), detects indexes that already serve a query or should be extended, and duplicate/redundant ones | "Which index should I add for these three queries?" |
 | [safe-migrations](skills/safe-migrations/SKILL.md) | Scans migrations for blocking locks and rewrites: index without `CONCURRENTLY`, NOT NULL without default, type changes, FKs without `NOT VALID`, missing lock_timeout, renames, drops; expand/contract and batched backfill patterns | "Review this migration before I run it on a 50M row table" |

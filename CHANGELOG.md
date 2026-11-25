@@ -6,6 +6,11 @@ All notable changes to this project are documented here. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- `sql-query-review`: `sql_lint.py` reports `limit_without_order_by` when a top-level
+  `LIMIT`/`OFFSET`/`FETCH` has no `ORDER BY` (unstable pagination; `info` for `LIMIT 1`).
+
 ## [0.1.0] - 2026-11-22
 
 ### Added

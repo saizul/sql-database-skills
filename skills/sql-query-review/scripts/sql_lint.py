@@ -529,6 +529,20 @@ class StatementLinter:
                     "add a WHERE clause; for intentional full-table changes batch it "
                     "(see safe-migrations) or use TRUNCATE",
                 )
+        # LIMIT/OFFSET without ORDER BY at the top level returns arbitrary rows
+        if first in ("SELECT", "WITH", "("):
+            top = [i for i, t in enumerate(code) if self.depth[i] == 0]
+            has_order = any(code[i].up == "ORDER" and self.up(i + 1) == "BY" for i in top)
+            lim = next((i for i in top if code[i].up in ("LIMIT", "OFFSET", "FETCH")), None)
+            if lim is not None and not has_order:
+                one = code[lim].up == "LIMIT" and self.tok(lim + 1) is not None and code[lim + 1].value == "1"
+                self.add(
+                    "limit_without_order_by",
+                    "info" if one else "low",
+                    lim,
+                    f"{code[lim].up} without ORDER BY returns an arbitrary, unstable set of rows",
+                    "add ORDER BY on a unique key (e.g. ORDER BY created_at DESC, id DESC) so pages are stable",
+                )
         comma_done = False
         for i, t in enumerate(code):
             u = t.up
