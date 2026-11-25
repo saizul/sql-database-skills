@@ -16,6 +16,7 @@ Check names match `sql_lint.py` output. Severity is the default the script assig
 | `order_by_random` | medium | Sorts the whole table to return a few rows. | Random ids in the app, `TABLESAMPLE`, or a precomputed random column. |
 | `large_offset` | low | `OFFSET 50000` reads and throws away 50,000 rows on every page. | Keyset pagination: `WHERE (created_at, id) < (?, ?) ORDER BY created_at DESC, id DESC LIMIT 20`. |
 | `implicit_cast` | medium/low/info | MySQL compares `varchar_col = 123` numerically: every row is cast, no index. PostgreSQL raises an error for text = integer. Quoted numbers against numeric columns are harmless (info) but hint at wrong driver types. | Compare like with like; bind parameters with the right type. |
+| `limit_without_order_by` | low (info for `LIMIT 1`) | Without `ORDER BY` the database may return any rows; pages overlap or skip rows as plans and data change. | `ORDER BY` a unique key (add `id` as a tie-breaker). |
 | `comma_join` | low | `FROM a, b` with a forgotten condition is a cross join. | Explicit `JOIN ... ON`. |
 | `insert_without_columns` | low | Breaks when columns are added or reordered. | Name the columns. |
 | `union_distinct` | info | `UNION` sorts/hashes to remove duplicates. | `UNION ALL` when branches cannot overlap. |
