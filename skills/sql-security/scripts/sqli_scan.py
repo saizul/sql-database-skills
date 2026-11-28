@@ -19,6 +19,11 @@ Severity: high when the line also reaches an execution sink or request input, me
 otherwise. Interpolated identifiers (ORDER BY / table names) get an allow-list hint.
 Suppress a line with a trailing comment containing "sqli-scan: ignore".
 
+Adopting it on an existing codebase: record today's findings with --write-baseline
+FILE, commit the file, and run with --baseline FILE in CI so only new findings fail.
+Baseline entries match on file, check and the code of the line (not the line number),
+so unrelated edits above a finding do not resurface it.
+
 Line-based heuristics: review every finding; strings split over many lines can be
 missed. The script only reads files. Exit codes: 0 = no findings at or above
 --fail-on, 1 = findings, 2 = error.
@@ -27,6 +32,7 @@ missed. The script only reads files. Exit codes: 0 = no findings at or above
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import re
@@ -227,6 +233,45 @@ def collect(paths: list[str]) -> list[tuple[str, str]]:
     return files
 
 
+def fingerprint(f: Finding) -> str:
+    """Stable id for a finding: file, check and whitespace-normalised code, not the line number."""
+    path = os.path.normpath(f.file).replace(os.sep, "/")
+    key = f"{path}|{f.check}|{' '.join(f.code.split())}"
+    return hashlib.sha256(key.encode("utf-8")).hexdigest()[:16]
+
+
+def write_baseline(path: str, findings: list[Finding]) -> None:
+    entries = sorted(
+        ({"fingerprint": fingerprint(f), "file": f.file, "check": f.check} for f in findings),
+        key=lambda e: (e["file"], e["check"], e["fingerprint"]),
+    )
+    with open(path, "w", encoding="utf-8") as fh:
+        json.dump({"version": 1, "tool": "sqli_scan", "findings": entries}, fh, indent=2)
+        fh.write("\n")
+
+
+def load_baseline(path: str) -> Counter:
+    with open(path, encoding="utf-8") as fh:
+        data = json.load(fh)
+    if not isinstance(data, dict) or not isinstance(data.get("findings"), list):
+        raise ValueError(f"{path}: not a sqli_scan baseline (expected a 'findings' list)")
+    return Counter(str(e.get("fingerprint", "")) for e in data["findings"] if isinstance(e, dict))
+
+
+def apply_baseline(findings: list[Finding], baseline: Counter) -> tuple[list[Finding], int]:
+    """Drop findings recorded in the baseline (each entry hides one occurrence)."""
+    left = Counter(baseline)
+    kept, hidden = [], 0
+    for f in findings:
+        fp = fingerprint(f)
+        if left[fp] > 0:
+            left[fp] -= 1
+            hidden += 1
+        else:
+            kept.append(f)
+    return kept, hidden
+
+
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(
         description="Find SQL injection risks (interpolated / concatenated SQL) in application code (read-only).",
@@ -235,22 +280,40 @@ def main(argv: list[str] | None = None) -> int:
     p.add_argument("paths", nargs="+", help="source files or directories")
     p.add_argument("--fail-on", choices=SEVERITIES, default="medium")
     p.add_argument("--json", action="store_true", help="print JSON")
+    p.add_argument("--baseline", metavar="FILE", help="hide findings recorded in this baseline file")
+    p.add_argument("--write-baseline", metavar="FILE", help="record all current findings to FILE and exit 0")
     args = p.parse_args(argv)
     try:
         files = collect(args.paths)
-    except OSError as exc:
+        baseline = load_baseline(args.baseline) if args.baseline else None
+    except (OSError, ValueError) as exc:
         print(f"error: {exc}", file=sys.stderr)
         return 2
     findings: list[Finding] = []
     for path, lang in files:
         findings += scan_file(path, lang)
     findings.sort(key=lambda f: (-SEVERITIES.index(f.severity), f.file, f.line))
+    if args.write_baseline:
+        try:
+            write_baseline(args.write_baseline, findings)
+        except OSError as exc:
+            print(f"error: {exc}", file=sys.stderr)
+            return 2
+        print(f"sqli-scan: wrote {len(findings)} finding(s) to {args.write_baseline}")
+        return 0
+    hidden = 0
+    if baseline is not None:
+        findings, hidden = apply_baseline(findings, baseline)
     counts = Counter(f.severity for f in findings)
     if args.json:
-        print(json.dumps({"files": len(files), "findings": [asdict(f) for f in findings]}, indent=2))
+        out = {"files": len(files), "findings": [asdict(f) for f in findings]}
+        if baseline is not None:
+            out["baseline_suppressed"] = hidden
+        print(json.dumps(out, indent=2))
     else:
         summary = ", ".join(f"{counts[s]} {s}" for s in reversed(SEVERITIES) if counts[s]) or "no findings"
-        print(f"sqli-scan: {summary} ({len(files)} files)")
+        extra = f", {hidden} in baseline" if baseline is not None else ""
+        print(f"sqli-scan: {summary} ({len(files)} files{extra})")
         for f in findings:
             print(f"{f.severity.upper():<7} {f.file}:{f.line}  {f.title}")
             print(f"        {f.code}")

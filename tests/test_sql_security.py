@@ -158,3 +158,42 @@ def test_grants_cli(tmp_path):
     assert run_script(SKILL, GRANTS, str(empty)).returncode == 2
     assert run_script(SKILL, GRANTS, str(tmp_path / "missing.txt")).returncode == 2
     assert run_script(SKILL, GRANTS, "--help").returncode == 0
+
+
+def test_baseline_hides_known_findings_only(tmp_path):
+    app = tmp_path / "app.py"
+    app.write_text('cur.execute(f"SELECT * FROM users WHERE id = {uid}")\n')
+    base = tmp_path / "sqli-baseline.json"
+    r = run_script(SKILL, SCAN, str(app), "--write-baseline", str(base))
+    assert r.returncode == 0 and "wrote 1 finding" in r.stdout
+    data = json.loads(base.read_text())
+    assert data["version"] == 1 and len(data["findings"]) == 1
+    assert run_script(SKILL, SCAN, str(app), "--baseline", str(base)).returncode == 0
+    # shifting the line and adding a new injection: only the new one is reported
+    app.write_text(
+        "# moved down\n\n"
+        'cur.execute(f"SELECT * FROM users WHERE id = {uid}")\n'
+        'cur.execute(f"DELETE FROM orders WHERE id = {oid}")\n'
+    )
+    r = run_script(SKILL, SCAN, str(app), "--baseline", str(base), "--json")
+    out = json.loads(r.stdout)
+    assert r.returncode == 1 and out["baseline_suppressed"] == 1
+    assert [f["line"] for f in out["findings"]] == [4]
+
+
+def test_baseline_counts_duplicate_lines(tmp_path):
+    line = 'cur.execute(f"SELECT * FROM t WHERE a = {a}")\n'
+    p = tmp_path / "dup.py"
+    p.write_text(line)
+    findings = scan.scan_file(str(p), "python")
+    base = scan.Counter(scan.fingerprint(f) for f in findings)
+    p.write_text(line * 2)
+    kept, hidden = scan.apply_baseline(scan.scan_file(str(p), "python"), base)
+    assert hidden == 1 and len(kept) == 1 and kept[0].line == 2
+
+
+def test_bad_baseline_file(tmp_path):
+    bad = tmp_path / "b.json"
+    bad.write_text("[1, 2]")
+    assert run_script(SKILL, SCAN, str(F / "app_good"), "--baseline", str(bad)).returncode == 2
+    assert run_script(SKILL, SCAN, str(F / "app_good"), "--baseline", str(tmp_path / "missing.json")).returncode == 2

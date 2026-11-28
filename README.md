@@ -33,7 +33,7 @@ deterministic analysis instead of guessing.
 | [schema-design-review](skills/schema-design-review/SKILL.md) | Reviews schema dumps: missing primary keys, int keys, unindexed FKs, FK type mismatches, FLOAT money, timestamp without time zone, utf8mb3, MyISAM, lists in columns, naming | "Review our schema before we launch" |
 | [slow-query-log-triage](skills/slow-query-log-triage/SKILL.md) | Groups MySQL slow logs, PostgreSQL duration logs and pg_stat_statements by fingerprint; ranks by total time with p95, rows examined, lock time, temp spills, chatty N+1 queries | "Which queries should we optimise first?" |
 | [backup-restore-drills](skills/backup-restore-drills/SKILL.md) | pg_dump/pg_restore and mysqldump recipes, PITR, plus a checker for truncated dumps, broken gzip, version mismatch, missing table data and source vs restored row counts | "Prove last night's backup actually restores" |
-| [sql-security](skills/sql-security/SKILL.md) | Finds SQL injection in Python, JS/TS, PHP, Ruby, Go, Java and C#; reviews GRANTs and roles for least privilege; row-level security checks | "Audit our database permissions and look for SQL injection" |
+| [sql-security](skills/sql-security/SKILL.md) | Finds SQL injection in Python, JS/TS, PHP, Ruby, Go, Java and C# (with a baseline for legacy code); reviews GRANTs and roles for least privilege; row-level security checks | "Audit our database permissions and look for SQL injection" |
 
 ## Install
 
