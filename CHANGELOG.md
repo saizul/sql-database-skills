@@ -8,6 +8,10 @@ All notable changes to this project are documented here. The format follows
 
 ### Added
 
+- `sql-security`: `sqli_scan.py --write-baseline FILE` records current findings and
+  `--baseline FILE` reports only new ones (matched on file, check and line content, so
+  moved lines stay hidden; duplicates are counted), for adopting the scan in CI on
+  existing code.
 - `sql-query-review`: `sql_lint.py` reports `limit_without_order_by` when a top-level
   `LIMIT`/`OFFSET`/`FETCH` has no `ORDER BY` (unstable pagination; `info` for `LIMIT 1`).
 
